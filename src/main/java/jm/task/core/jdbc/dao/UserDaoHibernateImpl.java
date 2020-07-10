@@ -66,8 +66,12 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        this.session = Util.getSessionFactory().openSession();
-        session.createQuery("DELETE FROM User");
-        session.close();
+        try (Connection connection = Util.getConnection()) {
+            assert connection != null;
+            Statement statement = connection.createStatement();
+            statement.execute("DELETE FROM users");
+        } catch (SQLException e) {
+            System.out.println("Выброшено SQL исключение в методе cleanUsersTable: " + e.getMessage());
+        }
     }
 }
