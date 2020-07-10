@@ -39,7 +39,7 @@ public class UserDaoJDBCImpl implements UserDao {
             statement.setString(2, lastName);
             statement.setByte(3, age);
             statement.execute();
-            System.out.println(String.format("Пользователь с именем: %s успешно добавлен в базу данных", name));
+            System.out.println(String.format("Пользователь с именем: %s - успешно добавлен в базу данных", name));
         } catch (SQLException e) {
             System.out.println("Выброшено SQL исключение в методе saveUser: " + e.getMessage());
         }
