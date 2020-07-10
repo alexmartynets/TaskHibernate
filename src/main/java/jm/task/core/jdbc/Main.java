@@ -7,11 +7,15 @@ public class Main {
     public static void main(String[] args) {
         // реализуйте алгоритм здесь
         final UserService userService = new UserServiceImpl();
-//        userService.dropUsersTable();
-//        userService.createUsersTable();
+
+        userService.createUsersTable();
         userService.saveUser("Vasya", "Pupkin", (byte) 16);
-        userService.removeUserById(1L);
+        userService.saveUser("Petr", "Petrov", (byte) 32);
+        userService.saveUser("Sashka", "Borodach", (byte) 64);
+        userService.saveUser("Superman", "RealAccount", (byte) 127);
         System.out.println(userService.getAllUsers());
-//        userService.cleanUsersTable();
+        userService.removeUserById(1L);
+        userService.cleanUsersTable();
+        userService.dropUsersTable();
     }
 }
