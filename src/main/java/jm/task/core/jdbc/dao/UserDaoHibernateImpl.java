@@ -20,37 +20,43 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        try (Connection connection = Util.getConnection()) {
-            assert connection != null;
-            Statement statement = connection.createStatement();
-            statement.execute("CREATE TABLE users (id BIGINT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), lastname VARCHAR(255), age INT)");
-        } catch (SQLException e) {
+        try {
+            session = Util.getSessionFactory().openSession();
+            session.createSQLQuery("CREATE TABLE users (id BIGINT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), lastname VARCHAR(255), age INT)").executeUpdate();
+            session.close();
+        } catch (Exception e) {
             System.out.println("Выброшено SQL исключение в методе createUsersTable: " + e.getMessage());
+            session.close();
         }
     }
 
     @Override
     public void dropUsersTable() {
-        try (Connection connection = Util.getConnection()) {
-            assert connection != null;
-            Statement statement = connection.createStatement();
-            statement.execute("DROP TABLE users");
-        } catch (SQLException e) {
+        try {
+            session = Util.getSessionFactory().openSession();
+            session.createSQLQuery("DROP TABLE users").executeUpdate();
+            session.close();
+        } catch (Exception e) {
             System.out.println("Выброшено SQL исключение в методе dropUsersTable: " + e.getMessage());
+            session.close();
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
         this.session = Util.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
         session.save(new User(name, lastName, age));
+        transaction.commit();
         session.close();
     }
 
     @Override
     public void removeUserById(long id) {
         this.session = Util.getSessionFactory().openSession();
-        session.createQuery("DELETE FROM User WHERE id = :id").setParameter("id", id);
+        Transaction transaction = session.beginTransaction();
+        session.createQuery("DELETE FROM User WHERE id = :id").setParameter("id", id).executeUpdate();
+        transaction.commit();
         session.close();
     }
 
@@ -66,12 +72,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        try (Connection connection = Util.getConnection()) {
-            assert connection != null;
-            Statement statement = connection.createStatement();
-            statement.execute("DELETE FROM users");
-        } catch (SQLException e) {
-            System.out.println("Выброшено SQL исключение в методе cleanUsersTable: " + e.getMessage());
-        }
+        session = Util.getSessionFactory().openSession();
+        session.createQuery("DELETE FROM User").executeUpdate();
+        session.close();
     }
 }
