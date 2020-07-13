@@ -27,7 +27,7 @@ public class Util {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             return DriverManager.getConnection("jdbc:mysql://localhost:3306/PP1" +
-                    "?serverTimezone=Europe/Moscow&useSSL=false",
+                            "?serverTimezone=Europe/Moscow&useSSL=false",
                     "root",
                     "root");
         } catch (Exception e) {
@@ -36,7 +36,7 @@ public class Util {
         return null;
     }
 
-    public static Configuration getConfiguration() {
+    private static SessionFactory createSessionFactory() {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(User.class);
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
@@ -46,11 +46,7 @@ public class Util {
         configuration.setProperty("hibernate.connection.password", "root");
         configuration.setProperty("hibernate.show_sql", "true");
         configuration.setProperty("hibernate.hbm2ddl.auto", "update");
-        return configuration;
-    }
 
-    private static SessionFactory createSessionFactory() {
-        Configuration configuration = getConfiguration();
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
         builder.applySettings(configuration.getProperties());
         ServiceRegistry serviceRegistry = builder.build();
