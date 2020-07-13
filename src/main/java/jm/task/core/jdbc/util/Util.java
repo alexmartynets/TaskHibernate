@@ -50,6 +50,7 @@ public class Util {
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
         builder.applySettings(configuration.getProperties());
         ServiceRegistry serviceRegistry = builder.build();
+
         return configuration.buildSessionFactory(serviceRegistry);
     }
 }
